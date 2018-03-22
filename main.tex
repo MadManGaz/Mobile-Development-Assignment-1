@@ -1,0 +1,301 @@
+\documentclass{scrreprt}
+\usepackage{scrhack}
+\usepackage[utf8]{inputenc}
+\usepackage[scaled]{beramono}
+\usepackage[T1]{fontenc}
+\usepackage[final]{microtype}
+\usepackage{hyperref}
+
+\usepackage{color}
+\definecolor{bluekeywords}{rgb}{0.13,0.13,1}
+\definecolor{greencomments}{rgb}{0,0.5,0}
+\definecolor{redstrings}{rgb}{0.9,0,0}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+
+\usepackage{listings}
+\lstset{
+numbers=left,
+frame=lines,
+showspaces=false,
+showtabs=false,
+breaklines=true,
+postbreak=\mbox{\textcolor{black}{$\hookrightarrow$}\space},
+showstringspaces=false,
+commentstyle=\color{greencomments},
+keywordstyle=\color{bluekeywords}\bfseries,
+stringstyle=\color{redstrings},
+basicstyle=\ttfamily
+}
+
+\usepackage{graphicx}
+
+\usepackage[
+backend=biber,
+style=authoryear,
+sorting=ynt
+]{biblatex}
+\addbibresource{mendeley.bib}
+
+\title{Programming Mobile Devices: Assignment 1}
+\author{Gary Moore}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Inception}\label{research}
+
+JD Electronics are requesting the development of a mobile app that promotes their company by providing features that attract the customer to download the app, with hooks to maintain their interaction with their app, and their brand.
+
+The app is to be feature rich, which entertainment such as quiz's and other  interactive elements to keep the user engaged, along with some e-commerce features allowing the user to find information about the products that they offer, along with an interface to purchase products on there too.
+
+\section{Challenges \& Solutions}
+
+We will have to make a few judgments with regards to the approach taken in developing this app. With the many variables involved in mobile application development, every path we take will have advantages and disadvantages. We have to look at each option in the context of the project proposal, and what would be a best fit for the type of app we are setting out to create.
+
+The following challenges have been identified and will be discussed below:
+
+\begin{itemize}
+    \item Platform market share
+    \item Platform market potential
+    \item Platform fragmentation
+    \item Ease of development
+    \item First and third party support of platform
+    \item Software tooling
+    \item Scalability
+    \item Cost
+\end{itemize}
+
+The story behind the market share of each major mobile phone platform isn't simple, with the raw numbers not giving much away, with a cursory glance at the information giving the impression that the android platform may be the way to go because of it's much larger user base.
+
+The android platform is host to the largest global market share when compared to any other mobile platform in use today. They have a market share that has consistently risen over time to in excess of 80\%, whereas the iOS market-share has remained consistent over time, hovering roughly between 10 and 20\% over the years, with a market share of 12.1\% as of Q2 2017. \cite{2017MobileStatista}.
+
+These statistics give the impression of a very lucrative marketplace on the android platform, however this could be misleading, as research shows there's greater potential on the iOS market, as users are more likely to pay for goods on the apple app store. Going into the future, iOS looks to hold on to the title of the greatest app store revenue generator over Google Play up until 2021 \cite{2017App2021}, so in the short ot medium term, this looks like the best choice when publishing a for profit app.
+
+Another important factor to look at is the friction of trade. Both iOS and Android have a mobile payment system that is used to make online and in store payments easier, and more intuitive. Less friction during a trade, that is the hoops the user is required to go through before making a purchase, is significantly reduced when using these systems which has the effect of increasing the conversion rate on e-commerce focused websites and apps.
+
+The iOS platform has the biggest market-share between Android/Google Pay and Apple Pay, \cite{2017UserStatistic}, this means that iOS users will be more likely to follow through with a purchase, as payment simply involves holding their thumb over a fingerprint reader.
+
+iOS should be the initial development target, however work on developing an android further should be looked into in the future, as there still is a significant market that could be utilized there.
+
+\section{Opportunities \& Challenges}
+
+The mobile app development world is a chance to penetrate a new marketplace, with new marketing and commerce opportunities available to a different audience compared to traditional brick and mortar, and the website. On iOS, there is the opportunity to be featured on the main page, which is great for exposure and growth, however this likely won't happen unless the app is really excellent. Android provides similar functionality, however the featured app editorials are less obvious on the store, and users are less likely to click them.
+
+There's the opportunity with a mobile app to get access to features that would not work on a website. For example, TouchID login on an iPhone, and push notifications on both platforms allow a reach to the customer that gives you the opportunity to increase your conversion rate at the cart by gently reminding the user that they abandoned their cart, and enabling friction-less payments with apple and Google pay with biometric login.
+
+Another useful feature that push notifications facilitates is shipping updates from a shipping information REST API, keeping the user informed as to what is happening with their package, which makes it more likely that the user will come back to shop again after having a positive experience.
+
+
+
+\section{Platforms \& Devices}
+
+Coming out of the abstract and into the development of the app, there are many tools for the job. The big examples of these are the following:
+
+\begin{itemize}
+    \item Microsoft Xamarin Studio
+    \item Apache Cordova
+    \item React Native
+\end{itemize}
+
+\paragraph{Xamarin Studio}
+
+Xamarin is a great platform for those that are native to the windows platform and .NET framework. Those familiar with C$^\sharp$ get to work with the language they are familiar with, without the factor of looking up documentation slowing down the development process. There are plenty of people with a skill set in .NET, with transferable skills to a mobile development project, such as experience with the MVC\footnote{Model View Controller} mode of development. Xamarin offers full integration of apple and Google native APIs into the .NET framework, along with UI elements, which means that there is no concern with this development platform with divergence from native APIs and the problems that causes, such as feature, performance and visual differences.
+
+A great time saving feature of visual studio is the nuget package manager integrated into Visual Studio Community for Windows, and for macOS. This is a package manager much like APT in Ubuntu or Debian that allows you to download, manage and update frameworks and libraries that your project uses. It could be argued that you could just use \texttt{git submodule add --init --recursive}, however a package manager integrated into the IDE is easier to use, and doesn't create as much confusion for new developers on the platform.
+
+There is one issue with Xamarin that could hold the project back in the future, and that is the requirement for diverging code bases when it comes to the interface development if you want to use native interface elements in optimal positions on each app. Xamarin Forms works the create the UI for both with one code base, but it can be slow on bigger projects, and could prohibitively slow down development and maintenance of the app in the future.
+
+There is also another great version of Xamarin Studio on macOS, which offers much the same functionality as Visual Studio on windows for multiplatform app development.
+
+\paragraph{Apache Cordova}
+
+This development technology allows the developers to create mobile apps using web APIs such as javascript, HTML, and CSS to develop their application. This creates what is considered a hybrid app, which acts much like a web page, however it is run locally on the device, with access to the platform specific APIs that allow you to do more than a website ever could, such as send push notifications, or gather information from the mobile phones various sensors.
+
+One of the advantages of using this approach is the ability to use a lot of the great JavaScript libraries made for the web in your application, enriched with the new telemetric data available from the phone.
+
+JavaScript is an interpreted langauge, which is a disadvange as the phone translates each plain text statement one line at a time rather than taking a pre-compiled down to machine code approach of Swift or JVM languages like Java and Kotlin\footnote{The new language introduced into Android Studio}.
+
+This could be a great option for any company that already has a website in use, as there is a great degree of data portability that this supports. Any client-side code and HTML/CSS on the website of a company made for mobile can be used on the mobile app, saving money and time in the upfront cost of getting a mobile app up and going.
+
+\paragraph{React Native}
+
+Web developers using the most modern technologies with be familiar with react, which is a framework that extends javascript. The advantage of developing with this framework, is the removal of the need to recompile the application over and over again in the write $\rightarrow$ compile $\rightarrow$ debug loop. Again, this has the same issues as cordova, with slower code execution time, which is only really an issue with complicated math functions, of performance constrained code, such as animation.
+
+For apps that interact with the web a lot, this is less of an issue, as HTTP GET requests etc. are typically performed asynchronously from the main thread which handles animation etc, with the tasks being done when their done without slowing down the rest of the app.
+
+\paragraph{Xcode}
+
+Xcode is the easiest set of tools to work with for mobile application development, with swift being a smart language that offers modern features such as closures (comparable to lambda expressions in other languages), type safety with type inference, generics, and other nice syntactic sugar like string interpolation. Swift is also a fast language (not fast to compile), which is run on cutting edge mobile processor technology with the latest frameworks almost always available to you, due to the lack of OS fragmentation on the iOS platform.
+
+The development model of a view, view controller and model just makes a lot of sense too, providing a good framework to discreetly abstract different types of logic that increase code readability.
+
+This is in a lot of ways the mobile developers platform, with a lot of sophistication in hardware, and great apple APIs and programming language. It does however come with it's drawbacks. Swift is open source and on different platforms, however it's only likely to take off on apples platform, whereas .NET is quickly opening up to be a dominant framework on multiple platforms. You need a mac to develop with Xcode for iOS. The apple app store can be a little restrictive on the app store when it comes to software that allows runtime code execution. Objective-C still has better auto-completion support in Xcode when compared to the newer sibling, however this is more than made up for with the removal of the remarkable amount of square brackets and the little amount of memory management required with the language.
+
+\paragraph{Android Studio}
+
+This is a relatively new IDE from Google based on JetBrains ReSharper IDE for Java. This IDE supports a lot of advanced features comparable to the features in Xcode, and can also do more than the iOS cousin, with language support for Java and Kotlin, however the issue with Android Studio and android development in general is the enormous OS fragmentation on the platform, with the latest features often not being able to be used in order to maintain compatibility with older platforms. Android development is a mess, with the Gradle build system downloading gigabytes of dependencies anytime you change your API target.
+
+Developing for android might be useful if you have a good marketing budget and don't expect to make money through the app, only raise awareness or offer a service driving people towards your platform.
+
+\section{Addressing User Requirements}
+
+The user is looking an application to promote their business, with the specific requirements of what the application is to do being a little vague. We are proposing an e-commerce application for the company, which has a login and registration system, product listings, a product detail view for every product, and the ability to add to and manage a cart before purchase.
+
+A mock-up will be built on the app inventor platform, demonstrating the features that the application will be capable of. This tool allows for the quick prototyping of applications through the use of drag and drop elements that exist at a high level of abstraction, removing much of the work on the details often required when working in software such as Xcode or Android Studio.
+
+\section{Scalability \& Feasibility}
+% how scalability will be considered for potential future development and discussion of the different aspects of Competitive Advantage, Integration, feasibility and cost and add value mobile technologies like location awareness, camera, scanning etc.
+
+It would be ideal for the product to be built on top of a cloud scaling system like Kubernetes\footnote{https://kubernetes.io/}, which allows the instantiation and termination of virtual machines based on the demand of the application. You can use a platfrom like Google Cloud Platform\footnote{https://www.google.com/} to manage all these variables for you.
+
+There's now the concept of the backend in the cloud for mobile devices that provide services like authentication for login, social networking, database integration and several other great APIs that can scale with the size of your business.
+
+Integration with the cloud will have to happen with any application integrated into the internet at some point, so it's good the get this done at the development stage before it becomes too much of a hassle to do.
+
+\section{Cost}
+
+The cost of development is going to vary from platform to platform, with the most expensive form of development probably being 2 independant teams for android and iOS development, and the most cost effective solution being adopting the web technologies currently used by the company into an app created with the cordova framework from apache. Both are valid options, with their advantages and disadvantages, however I feel that the best approach for a multiplatform app, is to use a framework that is suited for multiplatform development on mobile apps.
+
+The most developed out of these frameworks is likely the .NET framework with xamarin. There are plenty of .NET developers out there in the world, and with the open sourcing of the .NET framework and the creation of the .NET Foundation, the framework has seen great support on other platforms such as macOS since then, with a version of Xamarin studio available on Windows, macOS and different distributions of GNU/Linux for a few years now. You could cut the size of the required staff significantly, with only one code base being required.
+\chapter{Design}\label{design}
+
+\section{Pseudocode}
+
+\subsection*{Welcome Screen}
+
+\begin{lstlisting}
+When login button tapped:
+    Go to the login screen
+    
+When register button tapped:
+    Go to register screen
+\end{lstlisting}
+
+\subsection*{Register Screen}
+
+\begin{lstlisting}
+When system back button pressed:
+    Go to welcome screen
+    
+When application back button pressed:
+    Go to welcome screen
+
+When submit button pressed:
+    If the password input matches the confirmation input:
+        Set the hidden error label to visible
+        Store the username from textbox into TinyDB with the tag ('username' prefix + actual username)
+        Store password from textbox into TinyDB with the tag ('password' prefix + actual password)
+        Set success label visibility to true
+        Set password error label visibility to false
+\end{lstlisting}
+
+\subsection*{Login Screen}
+
+\begin{lstlisting}
+When system back button is pressed:
+    Go back to welcome screen
+    
+When application back button is pressed:
+    Go back to welcome screen
+    
+When login button is pressed:
+    I username and password match a username and password retrieved from the database:
+        open the main product view screen
+    else:
+        set error label visibility to true
+\end{lstlisting}
+
+\subsection*{Main Screen}
+
+\begin{lstlisting}
+Initialize global variable 'products' to JSON format collection of products and their details in key: string pairs
+
+When cart button is pressed:
+    Open the cart screen
+    
+When system back button is pressed:
+    Open the welcome screen
+    
+After picking item in product list:
+    Store global 'products' in TinyDB with tag 'Products'
+    Store the users selection in TinyDB with tag 'ProductValue'
+    Open the Product View screen
+
+When the Main screen is loaded:
+    Call getTitlesFromList function
+    Set the list view of products elements to the list returned from getTitlesFromList
+
+function getTitlesFromList:
+    initialize local 'listOfTitles' to empty list
+    for each 'number' in list 'products':
+        Get the list at 'number' in 'products'
+        In this new list, select the item at it's first index
+        add this item to the list 'listOfTitles'
+    return 'listOfTitles'
+\end{lstlisting}
+
+\subsection*{Product View Screen}
+
+\begin{lstlisting}
+initialize global 'products' to TinyDB item at tag 'Products'
+initialize global 'selection' to TinyDB item at tag 'ProductValue'
+initialize global 'product' to result of getProductList using key global 'selection' and list global 'products'
+
+When system back button is pressed:
+    Go to main screen page
+    
+When add to cart button pressed:
+    Initialize local 'workingList' to empty list
+    Set 'workingList' to TinyDB entry at tag "Cart"
+    Add global 'selection' to list 'workingList'    
+
+On screen initialize:
+    Set product title label text to global 'selection' with html h1 formatting
+    set product description label text to the item at key 'Description' in list global 'product' with html h2 formatting
+    Set product price label text to the item at key 'Price' in the list global 'product'
+    if selection == "Piping Simulator 2018":
+        set product image to "pipingSimulator2018.png"
+    else if selection == "Sprug Nuts":
+        set product image to "sprugNuts.jpg"
+    else if selection == "Electronic Game":
+        set product image to "electronicGame.jpg"
+    else if selection == "Donald Trump: The Board Game":
+        set product image to "trumpGame.jpg"
+\end{lstlisting}
+
+\section{Flow Charts}
+
+\chapter{Development}\label{development}
+
+\section{Introduction}
+
+The development will be carried out in App Inventor which is great software written by MIT in the interest of creating a visual metaphor for programming mobile devices. The programming is carried out through the use of blocks you piece together, using the same conventions as traditional programming languages but without the typing.
+
+\section{GUI Implementation}
+
+The GUI is implemented using layouts and views. App Inventor uses a simplified outlook on the layout of a screen, excluding paradigms used in android studio such as fragments and more advanced layout views such as \texttt{TabHost}. Managing some boilerplate code such as view adapters isn't necessary in app inventor 
+
+\section{Backend}
+
+These are a few notes, nothing important, just a reference for me.
+
+Features
+
+\begin{itemize}
+    \item Working login system
+    \item Material design conforming icons
+    \item Working product database system
+    \item Working cart system
+    \item All fully dynamic (with the exception of product images.)
+\end{itemize}
+
+\chapter{Testing and Feedback}\label{testing}
+
+\chapter{Deployment Presentation}\label{deployment}
+
+\printbibliography
+
+\end{document}
