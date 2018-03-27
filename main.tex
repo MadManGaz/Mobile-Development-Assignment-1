@@ -250,7 +250,9 @@ When system back button is pressed:
 When add to cart button pressed:
     Initialize local 'workingList' to empty list
     Set 'workingList' to TinyDB entry at tag "Cart"
-    Add global 'selection' to list 'workingList'    
+    Add global 'selection' to list 'workingList'
+    Store the working list to TinyDB under the tag 'Cart'
+    Call on snackbar extension to print 'Added to Cart' when add to cart button is pressed
 
 On screen initialize:
     Set product title label text to global 'selection' with html h1 formatting
@@ -264,9 +266,75 @@ On screen initialize:
         set product image to "electronicGame.jpg"
     else if selection == "Donald Trump: The Board Game":
         set product image to "trumpGame.jpg"
+        
+function getProductList takes 'key', 'list':
+    Initialize local variable called 'workingList'
+    Set 'workingList' by getting value using look up in pairs block using 'key' and 'list'
+    return 'list'
+\end{lstlisting}
+
+\subsection*{Cart Screen}
+
+\begin{lstlisting}
+Initialize global 'products' to empty list
+Initialize global 'cart' to empty list
+
+When system back button pressed:
+    Open screen main
+    
+When home button pressed:
+    Open screen main
+    
+When clear button pressed:
+    Clear cart database
+    Clear cart listView
+    
+On screen initialize:
+    Set 'products' to value from database
+    Set 'cart' to value from database
+    Call function populateCart
+    
+Function populateCart:
+    Initialize local 'cartListView'
+    For each 'item' in 'cart':
+        Select item from 'cart' based on 'item' as index
+        Use above item as key for item from pair in list 'products'
+        Find value in pair with key "Price"
+        The cart item and price item will be concatenated in string and added to list
+    Set 'cartListView' as elements for the cart list
 \end{lstlisting}
 
 \section{Flow Charts}
+
+\subsection*{Registration}
+
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/flowRegister.png}
+\end{center}
+
+\subsection*{Login}
+
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/flowLogin.png}
+\end{center}
+
+\subsection*{Main Page}
+
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/flowMain.png}
+\end{center}
+
+\subsection*{Product Information}
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/flowProductDetails.png}
+\end{center}
+
+\subsection*{Cart}
+
+\begin{center}
+    \includegraphics[width=0.4\linewidth]{images/flowCart.png}
+\end{center}
 
 \chapter{Development}\label{development}
 
@@ -276,25 +344,268 @@ The development will be carried out in App Inventor which is great software writ
 
 \section{GUI Implementation}
 
-The GUI is implemented using layouts and views. App Inventor uses a simplified outlook on the layout of a screen, excluding paradigms used in android studio such as fragments and more advanced layout views such as \texttt{TabHost}. Managing some boilerplate code such as view adapters isn't necessary in app inventor 
+App inventor was created with the intention of making app development accessible to all. There are some compromises required to meet that goal, with some of those manifesting in the lacklustre layout management with the software. There is no constraint layout in app inventor, and a lot of view elements that are in android studio simply aren't present in app inventor, restricting what can be achieved with the software with regards to the GUI.
 
-\section{Backend}
+\section{Back-end}
 
-These are a few notes, nothing important, just a reference for me.
+\subsection{Welcome Screen}
 
-Features
+When you start the application, you are greeted with this welcome screen.
 
-\begin{itemize}
-    \item Working login system
-    \item Material design conforming icons
-    \item Working product database system
-    \item Working cart system
-    \item All fully dynamic (with the exception of product images.)
-\end{itemize}
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/welcomeDesign.png}
+\end{center}
+
+This screen presents the user with a welcome message, and a login and register button which leads to a different page. The back-end code for this page is pretty simple, but it's worth showing as it demonstrates a simple event listener.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/welcomeCode.png}
+\end{center}
+
+These events trigger when their corresponding button is touched, and the corresponding screen is then opened. These are the only functions on this page.
+
+\subsection{Register screen}
+
+Clicking the register button on the welcome screen leads here. Here is the design of this screen.
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/registerDesign.png}
+\end{center}
+
+The user inputs their username, and must enter a password twice to ensure that they entered it correctly the first time.
+
+The code is as follows.
+
+\begin{center}
+    \includegraphics[width=\linewidth]{images/registerButtonSubmit.png}
+\end{center}
+
+When the user presses the submit button, the program checks to ensure that the input passwords match and then stores the username and password into a database if the passwords match. The success label is displayed, and if the failure label was visible, it is set invisible. If the password comparison fails, an error label is set to visible.
+
+Other code on this page include the following.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/registerOther.png}
+\end{center}
+
+This is just simple navigation code to get to the last screen. The only thing of note here is the event listener for the system back button is supported, which leads to the previous page.
+
+\subsection{Login Screen}
+
+The login screen is very simple, with only two text boxes as input, and a login button that executes the logic that checks if the login is valid against the database. The login screen design is as follows.
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/loginDesign.png}
+\end{center}
+
+The code for this screen.
+
+\begin{center}
+    \includegraphics[width=\linewidth]{images/loginButton.png}
+\end{center}
+
+This is the code for the login button. This might be too wide to read on the page, but I will describe what it does. When the login button is pressed, the user input username and password is compared against the result of a call from TinyDB on the tag with the `username' or `password' prefix, followed by the user input username. If both comparisons pass, the main screen is opened. If the check fails, an error label is shown.
+
+The following is the rest of the code on the page, boilerplate code.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/loginOther.png}
+\end{center}
+
+\subsection{Main screen}
+
+The primary screen interface consists of a menu bar at the bottom for navigation, a listView in the center containing a list of available products, and a title at the top of the page. I made use of the official google icons for android available at \url{https://material.io/icons/}, which allows you to freely use their high resolution artwork that's suitable for high resolution qHD panels on modern smartphones.
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/mainDesign.png}
+\end{center}
+
+In order to save the product information, I made use of a JSON like data structure so I could easily access the information on a product by parsing a list of key:string pairs. Here is the data structure code block in this screen.
+
+\begin{center}
+    \includegraphics[width=\linewidth]{images/mainList.png}
+\end{center}
+
+The whole thing is a list of these key:string pairs. There's a function in app inventor that allows you to search by key to get the string value. List objects in app inventor are actually stored as strings with parenthesis acting as a delimiter between elements of a list, so this works here.
+
+This next part performs the initialization required to display a list of products on the listView in the center of the page.
+
+\begin{center}
+    \includegraphics[width=\linewidth]{images/mainInit.png}
+\end{center}
+
+The method for extracting just the titles from the great products list is a little verbose, luckily it only needs to be done once, so I put it into its own method for potential reuse later. There is one problem I spotted on review of the code. the \texttt{key} parameter on the function \texttt{getTitlesFromList} isn't used at all in the function.
+
+A run through the code is as follows. I want to create a temporary working list called \texttt{listOfTitles}, instantiating it to an empty list. I then loop through the global \texttt{products} list, selecting the first item on that list (I should replace this select item block with a select with key block to make use of the key parameter of the function), and adding that item to the \texttt{listOfTitles} list. At the end of this, I will end up with a list full of just the titles, and not the other information. At the end of this function, I then return it as output, and in the screen initialize function, this list is passed on as the listViews elements.
+
+These next blocks of code aren't very important, they handle navigation for the bottom navigation bar.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/mainNavigation.png}
+\end{center}
+
+This last block of code stores the products data and the users selection into TinyDB and opens the product view screen.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/mainDatabase.png}
+\end{center}
+
+\subsection{Product View Screen}
+
+\paragraph{Design}
+
+The product view screen required the ability to dynamically change a title, content and price label, as well as an image. The title is at the top, and is in a horizontal layout with the add to cart button to it's right in a vertical layout with a label.
+
+Everything below this is in a vertical scroll layout, with sub layouts in this in order to get a good look and feel.
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/productDesign.png}
+\end{center}
+
+\paragraph{Globals}
+
+The first code likely executed on this page is the initialization of the global variables, which are as follows.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/productVariables.png}
+\end{center}
+
+TinyDB cannot be a part of the initialization of a variable, so these are initialized to empty lists or strings instead.
+
+\paragraph{Initialization}
+
+The initialization is as follows.
+
+\begin{center}
+    \includegraphics[width=\linewidth]{images/productInit.png}
+\end{center}
+
+This is a rather big function call, but once written once it for the most part doesn't need to be touched again. This is with the exception of one thing, that is setting the image. Adding another image to this block isn't complicated, however and only really involves adding two new strings.
+
+At the top I'm assigning the values from the database that were stored in the main page to the globals that were initialized at the start of this page. The top two statements are simple enough, they pull the values from the database at their respective tags, and the third statement gets a sub list using the users selection on the main page as a key to obtain it. This list will contain the product information of the product they had chosen.
+
+The title is easily enough set as it is the same as the global \texttt{selection} variable. The content and price are obtained from the global \texttt{product} list using the appropriate key.
+
+There's a better way to implement the image switching, but the approach that I went for is a large block of conditional statements that checks the global \texttt{selection} string and sets the appropriate image for the picture view.
+
+\paragraph{\texttt{getProductList}}
+
+This next section of the code is responsible for getting a subset for a specific product from the products list.
+
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/productGetProductList.png}
+\end{center}
+
+This function takes the parameters \texttt{key} and \texttt{list}, with the key being the title of the product in that list, and returns a list that contains only key:string pairs for one product.
+
+It does this by using a working list, and creating the subset list using the `look up in pairs' block, and assigning the result to the variable \texttt{workingList}. This list is then returned to the caller.
+
+\paragraph{Add to cart}
+
+The add to cart button action is responsible for adding the currently viewed product to the TinyDB database, and the code for this is as follows.
+
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/productCart.png}
+\end{center}
+
+The code creates an empty working list, and gets the list stored at the \texttt{"Cart"} tag in the TinyDB. The code then adds the current selection to the list, then stores it in the database again with the same tag, overwriting the old list. Outside the scope of the \texttt{workingList} variable, I used an extension to display a small notification at the bottom of the screen to give visual feedback that adding to the cart was successful. A screenshot showing what that looks like is below.
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/productSnackbar.png}
+\end{center}
+
+This notification fades in, has a lifetime or around 1 second, then fades back out without occluding information for too long.
+
+The final bit of code is for navigation.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/productNav.png}
+\end{center}
+
+\subsection{Cart}
+
+The design of the cart is simple because you cannot put images inside listViews like you can with Android Studio. Each cart item in the list view contains a title and a price, and there is also a title label for the page, and a button that clears the cart. The following is what the design of the cart looks like.
+
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{images/cartDesign.png}
+\end{center}
+
+Here's the code for the cart, with the first snippet being the global variables.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/cartGlobal.png}
+\end{center}
+
+Much like the page before, we have to initialize these to empty lists because of TinyDB.
+
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{images/cartInit.png}
+\end{center}
+
+This code pull the values from the database into the globals \texttt{products} and \texttt{cart}. This code then calls a function that populates the cart.
+
+This is the code for the function \texttt{populateCart}.
+
+\begin{center}
+    \includegraphics[width=\linewidth]{images/cartPopulate.png}
+\end{center}
+
+This function would be the equivalent of void in Java as it does not return a value, but does perform a procedure. The purpose of this function is to get the cart list, and iterate through the product list, on each iteration using the current cart item as an index in the products list and putting these in a string concatenation with an \texttt{\textbackslash n}. These concatenated strings are then passed to a list, and then this list is assigned to a list view to create a cart item entry.
+
+The first three blocks here are responsible for navigation, and the last is responsible for clearing the cart.
+
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{images/cartNavigation.png}
+\end{center}
+
+The clear button just sets the \texttt{"Cart"} tag value to an empty list, clearing it. It also sets the listView elements on the page to an empty list.
 
 \chapter{Testing and Feedback}\label{testing}
 
+\section{Testing}
+
+I was testing for the following in the video below:
+
+\begin{itemize}
+    \item All screens start up and function correctly
+    \item The registration screen correctly adds a user to the database
+    \item The registration screen does not create a user if the passwords do not match
+    \item The login screen will not accept a user that isn't in the database
+    \item The login screen will accept a user that's in the database
+    \item The list on the main screen will populate properly
+    \item When the user clicks an item on the list, it should take them to the corresponding product information page
+    \item When the user clicks on an item in the bottom navigation bar, it should take them to the corresponding screen.
+    \item The product information page should fetch the correct product information from the database and display it correctly
+    \item The add to cart button should display a snackbar at the bottom of the screen confirming the add to cart action
+    \item Upon the add to cart action, there should be an entry into the cart when the cart screen is loaded
+    \item When the clear button is clicked, the cart should be persistently cleared from the list view, and from the database.
+\end{itemize}
+
+All of these features appear to work correctly, however when the app is run in the emulator in the video, the list view text and the welcome screen layout display incorrectly. This does not happen when the application is run from a real android testing device, you can look at screenshots earlier in the document under Development to see how they should appear.
+
+The quiz menu item doesn't work as the screen doesn't exist, so should be removed. This was not shown in the video.
+
+\paragraph{Video link}
+
+\url{https://youtu.be/CYf-Gu0mqpk}
+
+\section{Feedback}
+
+\paragraph{Look and Feel}
+
+The feedback I received under this point seems to be generally favorable. The style of the user interface is said to be clean and consistent, however I have received on criticism with regards to the plain presentation of the main menu screen. There is no thumbnail icon for each of the products. In order to maintain compatibility with the code I would have to ensure that I am still using a list view, however there is likely third party app inventor extensions that would allow me to present images alongside the text elements.
+
+\paragraph{Functionality}
+
+The login and logout function was received to be potentially useful in a full app, and the add to cart snackbar was seen to be a nice addition to the application, with the snackbar said to be useful elsewhere, especially if pared with a button such as undo.
+
+\paragraph{Purpose}
+
+The reason for the apps existence was perceived to be clear, with the application being a commerce app, There weren't many issues there. It was said however that the app could do with some extra functionality, with features such as search, filtering and categorization of products being a potential addition in the future.
+
 \chapter{Deployment Presentation}\label{deployment}
+
+Refer to the attached slides.
 
 \printbibliography
 
